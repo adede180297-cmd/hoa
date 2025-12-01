@@ -154,16 +154,17 @@ async def xuong_ca(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Cố xíu nữa thôi, sắp được tự do rồi 😎"
         )
     else:
-        # đã qua giờ xuống ca -> báo đã hết ca
         await update.message.reply_text(
             "🏁 Hết ca rồi đó bạn ơi! Nếu còn làm thì là… làm vì đam mê đó nha 😅"
         )
 
 # ===== Run bot =====
 def main():
-    token = os.getenv("8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A")
-    if not token:
-        raise RuntimeError("Missing BOT_TOKEN env var")
+    # CÁCH 2: dán token trực tiếp ở đây
+    token = "PASTE_YOUR_REAL_TOKEN_HERE"
+
+    if not token or token == "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A":
+        raise RuntimeError("Bạn chưa dán token thật vào biến token!")
 
     app = ApplicationBuilder().token(token).build()
 
@@ -179,5 +180,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
