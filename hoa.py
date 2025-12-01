@@ -163,7 +163,7 @@ async def xuong_ca(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     token = os.getenv("8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A")
     if not token:
-        raise RuntimeError("Missing 8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A env var")
+        raise RuntimeError("Missing BOT_TOKEN env var")
 
     app = ApplicationBuilder().token(token).build()
 
@@ -179,4 +179,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
