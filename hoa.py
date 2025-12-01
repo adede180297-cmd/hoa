@@ -345,7 +345,7 @@ async def hoa(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ===== Run bot =====
 def main():
-    token = "PASTE_YOUR_REAL_TOKEN_HERE"  # dán token thật (token mới) vào đây
+    token = "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A"  # dán token thật (token mới) vào đây
 
     if not token or token == "PASTE_YOUR_REAL_TOKEN_HERE":
         raise RuntimeError("Bạn chưa dán token thật vào biến token!")
@@ -367,3 +367,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
