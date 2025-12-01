@@ -44,22 +44,32 @@ def fmt_td(seconds: int) -> str:
 # ===== /start =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🤖 Bot hoạt động rồi nè!\n\n"
-        "4 lệnh chính:\n"
-        "🍚 /ancom  -> trả lời hài hước\n"
-        "💧 /uongnuoc HH:MM  -> đặt nhắc uống nước mỗi ngày\n"
-        "🚽 /divesinh -> trả lời hài hước\n"
-        "🏁 /xuongca -> còn bao lâu xuống ca (giờ VN)\n\n"
-        "Hủy nhắc uống nước: /cancel"
+        "🤖 **Bot hoahoabot đã online!** 🤖\n\n"
+        "📌 4 lệnh chính nè:\n"
+        "🍚 /ancom  → kêu bạn đi ăn cơm kiểu hài hài\n"
+        "💧 /uongnuoc HH:MM  → đặt nhắc uống nước mỗi ngày\n"
+        "🚽 /divesinh → nhắc đi vệ sinh cho nhẹ người 😆\n"
+        "🏁 /xuongca → đếm ngược còn bao lâu được về (giờ VN)\n\n"
+        "🧹 Hủy nhắc uống nước: /cancel"
     )
 
 # ===== 1) /ancom =====
 async def an_com(update: Update, context: ContextTypes.DEFAULT_TYPE):
     jokes = [
-        "🍚 Ăn cơm đi boss ơi, đừng để bụng réo như loa phường!",
-        "🍚 Cơm mà không ăn là cơm buồn đó nha 😂",
-        "🍚 Đã ăn cơm chưa? Ăn xong nhớ để dành sức… làm tiếp nha!",
-        "🍚 Ăn cơm đúng giờ thì mới có lực chiến với deadline 😎",
+        "🍚 **Tới giờ ăn cơm rồi đóoo!** 🍚\n\n"
+        "Bụng mà réo lên là não lag liền nha 😵‍💫\n"
+        "Ăn xong rồi chiến tiếp cho máu 😎\n\n"
+        "🔥 Đi ăn cơm thôi boss!",
+        
+        "🍚 **Ăn cơm điiii!** 🍚\n\n"
+        "Cơm chờ lâu là cơm buồn đó nha 😂\n"
+        "Ăn no mới có lực đánh deadline chứ 😤\n\n"
+        "👉 Lượn nhẹ đi ăn nào!",
+        
+        "🍚 **Check in bữa cơm cái nè** 🍚\n\n"
+        "Đói quá là dễ cáu… dễ nghỉ việc lắm 😆\n"
+        "Ăn cho vui vẻ rồi quay lại làm tiếp nha!\n\n"
+        "😋 Mời bạn dùng bữa!"
     ]
     idx = (update.message.id or 0) % len(jokes)
     await update.message.reply_text(jokes[idx])
@@ -94,13 +104,17 @@ async def uong_nuoc(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         await update.message.reply_text(
-            f"💧 Ok luôn! Mình sẽ nhắc bạn uống nước lúc **{time_text}** mỗi ngày.\n"
-            f"Nội dung nhắc: {message_text}"
+            "💧 **Đã set nhắc uống nước!** 💧\n\n"
+            "Bot sẽ canh giờ cho bạn như canh nồi lẩu 😄\n"
+            "Uống đều đều cho da đẹp người xinh nhaaaa ✨\n\n"
+            f"⏰ Giờ nhắc: **{time_text}** mỗi ngày\n"
+            f"📝 Nội dung: {message_text}"
         )
 
     except Exception:
         await update.message.reply_text(
-            "Sai cú pháp rồi 😅\nVí dụ:\n"
+            "❌ **Sai cú pháp rồi bạn ơi!**\n\n"
+            "Ví dụ nè:\n"
             "`/uongnuoc 14:30`\n"
             "`/uongnuoc 14:30 Nhắc uống nước nha`"
         )
@@ -108,7 +122,11 @@ async def uong_nuoc(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def alarm_uongnuoc(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=context.job.chat_id,
-        text=f"💧 Đến giờ rồi! {context.job.data}\nNhấp vài ngụm cho tỉnh táo nè 😄"
+        text=(
+            "💧 **Tới giờ uống nước rồi nè!** 💧\n\n"
+            f"📌 {context.job.data}\n"
+            "Nhấp vài ngụm cho tỉnh táo, đừng để khô như cá mắm nha 😆"
+        )
     )
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -117,17 +135,27 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if jobs:
         for j in jobs:
             j.schedule_removal()
-        await update.message.reply_text("✅ Đã hủy nhắc uống nước.")
+        await update.message.reply_text(
+            "🧹 **Ok! Đã hủy nhắc uống nước.**\n\n"
+            "Khi nào cần nhắc lại thì gọi mình nha 💙"
+        )
     else:
-        await update.message.reply_text("Không có nhắc uống nước nào để hủy.")
+        await update.message.reply_text(
+            "🤔 **Chưa có nhắc nào để hủy á.**\n\n"
+            "Bạn set bằng `/uongnuoc HH:MM` trước đã nhé!"
+        )
 
 # ===== 3) /divesinh =====
 async def di_ve_sinh(update: Update, context: ContextTypes.DEFAULT_TYPE):
     jokes = [
-        "🚽 Đi vệ sinh nhớ mang theo… niềm vui và đừng mang deadline theo nha 😆",
-        "🚽 Có đi là có nhẹ người! Đi lẹ rồi comeback mạnh mẽ 💪",
-        "🚽 Xả stress đúng nơi đúng chỗ, chuẩn bài!",
-        "🚽 Đi cho thoải mái, về làm việc cho phấn khởi 😄",
+        "🚽 **Đi vệ sinh thôi nào!** 🚽\n\n"
+        "Đừng cố nhịn nha, nhịn là bụng biểu tình đó 😵‍💫\n"
+        "Đi xong nhẹ người, quay lại chiến tiếp 😎\n\n"
+        "🏃‍♂️ Let's goooo!",
+        
+        "🚽 **Tới giờ giải phóng nội tâm** 🚽\n\n"
+        "Xả stress đúng nơi đúng chỗ = cuộc đời hạnh phúc 😆\n\n"
+        "✨ Chúc bạn nhẹ bụng!"
     ]
     idx = (update.message.id or 0) % len(jokes)
     await update.message.reply_text(jokes[idx])
@@ -136,13 +164,14 @@ async def di_ve_sinh(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def xuong_ca(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Tính còn bao lâu xuống ca theo giờ VN.
-    Mặc định ca kết thúc 17:30. Có thể đổi bằng env SHIFT_END="HH:MM"
+    Mặc định ca kết thúc 20:00 (8h tối).
+    Có thể đổi bằng env SHIFT_END="HH:MM"
     """
-    shift_end_str = os.getenv("SHIFT_END", "17:30")
+    shift_end_str = os.getenv("SHIFT_END", "20:00")
     try:
         end_h, end_m = parse_hhmm(shift_end_str)
     except Exception:
-        end_h, end_m = 17, 30
+        end_h, end_m = 20, 0
 
     now = datetime.now(VN_TZ)
     end_today = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
@@ -150,18 +179,22 @@ async def xuong_ca(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if now <= end_today:
         delta_sec = int((end_today - now).total_seconds())
         await update.message.reply_text(
-            f"🏁 Còn **{fmt_td(delta_sec)}** nữa là xuống ca rồi!\n"
-            "Cố xíu nữa thôi, sắp được tự do rồi 😎"
+            "🏁 **Đếm ngược xuống ca nèeee!** 🏁\n\n"
+            "Bot đang hưng phấn năng lượng cùng bạn ⚡\n"
+            "Ráng thêm xíu nữa là được tự do rồi đóooo 😎\n\n"
+            f"⏳ Còn: **{fmt_td(delta_sec)}**"
         )
     else:
         await update.message.reply_text(
-            "🏁 Hết ca rồi đó bạn ơi! Nếu còn làm thì là… làm vì đam mê đó nha 😅"
+            "🏁 **Hết ca rồi đó bạn ơi!** 🏁\n\n"
+            "Nếu bạn còn làm thì là… làm vì đam mê đó nha 😅\n"
+            "Nhớ nghỉ ngơi nữa nèee ❤️"
         )
 
 # ===== Run bot =====
 def main():
     # CÁCH 2: dán token trực tiếp ở đây
-    token = "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A"
+    token = "PASTE_YOUR_REAL_TOKEN_HERE"
 
     if not token or token == "PASTE_YOUR_REAL_TOKEN_HERE":
         raise RuntimeError("Bạn chưa dán token thật vào biến token!")
