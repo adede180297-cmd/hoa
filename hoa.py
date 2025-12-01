@@ -58,13 +58,13 @@ def pick(lst):
 START_MSGS = [
     "🤖 Bot hoahoabot online rồi nha!\n\nMuốn ăn cơm thì /ancom,\nnhắc nước thì /uongnuoc HH:MM nhé 😄",
     "Hello bạn!\n\nBot sẵn sàng phục vụ 😎\nThử /ancom hoặc /xuongca đi nè!",
-    "Ping ping! Bot đã thức giấc 🐣\n\nLệnh chính: /ancom /uongnuoc /divesinh /xuongca /noel /tet",
+    "Ping ping! Bot đã thức giấc 🐣\n\nLệnh chính: /ancom /uongnuoc /divesinh /xuongca /noel /tet /hoa",
     "Bot đang trực 24/7 nè 😆\n\nCứ quăng lệnh là mình rep liền!",
     "Kết nối thành công 🤝\n\nUống nước nhớ gọi /uongnuoc nha bạn!",
     "Hoahoabot xuất hiện!\n\nĐói thì /ancom,\nbuồn ngủ thì uống nước 😄",
     "Bot đã online 📡\n\nLật bài bằng /start để xem lệnh nhé!",
     "Xin chào!\n\nMình là bot nhắc việc linh tinh cho bạn 😂",
-    "Bot bật rồi nha 😎\n\nThử /noel hoặc /tet xem còn bao lâu nữa!",
+    "Bot bật rồi nha 😎\n\nThử /noel, /tet hoặc /hoa xem vui không!",
     "Có mình ở đây rồi!\n\nĐừng quên ăn cơm và uống nước đúng giờ 😋",
 ]
 
@@ -224,6 +224,20 @@ TET_AFTER_MSGS = [
     "🧧 Xuân sang, chúc bạn may mắn!",
 ]
 
+# ===== /hoa (10 bài thơ khen Hoa) =====
+HOA_POEMS = [
+    "🌸 Hoa ơi, tên đẹp như hoa nở,\nNụ cười em dịu nhẹ tháng ngày qua.\nAi nhìn thấy cũng lòng thêm rạng rỡ,\nChỉ mong hoài được cạnh một đóa hoa.",
+    "🌼 Gọi em là Hoa, trời xanh cũng mát,\nGió ngang qua thơm ngát cả con đường.\nTính em hiền như mây chiều man mác,\nLàm tim này cứ vấn vương… vấn vương.",
+    "🌺 Hoa là nắng sớm trong veo,\nLà câu chuyện nhỏ gieo vào bình yên.\nAi gặp một lần là nhớ,\nNhớ hoài cái vẻ dịu hiền dễ thương.",
+    "🌻 Hoa cười một cái, ngày vui cả bữa,\nHoa nói một câu, trời nhẹ tênh tênh.\nEm như đóa hướng dương vừa chớm nở,\nĐứng đâu là sáng ở nơi mình.",
+    "💐 Hoa không chỉ là tên gọi,\nMà còn là cả một trời đáng yêu.\nNhẹ nhàng như gió qua chiều,\nMà làm người khác thương nhiều không hay.",
+    "🌷 Hoa bước qua, mùa xuân ghé lại,\nMắt em cười làm phố cũng thành thơ.\nAi bảo đời nhiều khi mệt mỏi,\nGặp em rồi, tự dưng thấy đợi chờ.",
+    "🏵️ Hoa là hoa của lòng người,\nKhông cần rực rỡ vẫn tươi lạ thường.\nHiền như giọt nắng trên tường,\nMà sao ai cũng nhớ thương thật nhiều.",
+    "🌹 Hoa đẹp chẳng phải vì son phấn,\nMà vì em sống chân thành, dễ thương.\nMột chút dịu dàng, một chút sâu thương,\nKhiến ai gặp cũng muốn vương… một đời.",
+    "🌸 Hoa ơi, em là mùa trong mắt,\nLà giấc mơ lành giữa bộn bề lo.\nChỉ cần em cười là lòng bớt chật,\nNhư cánh hoa rơi cũng hóa thành thơ.",
+    "🌼 Nếu hỏi ai là điều dễ mến,\nThì chắc chắn có tên của Hoa.\nVừa dịu dàng, vừa hay quan tâm lắm,\nHoa ở đâu, ở đó thấy ôn hòa."
+]
+
 # ===== Commands =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(pick(START_MSGS))
@@ -325,9 +339,13 @@ async def tet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text(pick(TET_AFTER_MSGS))
 
+# ===== /hoa =====
+async def hoa(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(pick(HOA_POEMS))
+
 # ===== Run bot =====
 def main():
-    token = "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A"  # dán token thật vào đây
+    token = "PASTE_YOUR_REAL_TOKEN_HERE"  # dán token thật (token mới) vào đây
 
     if not token or token == "PASTE_YOUR_REAL_TOKEN_HERE":
         raise RuntimeError("Bạn chưa dán token thật vào biến token!")
@@ -341,6 +359,7 @@ def main():
     app.add_handler(CommandHandler("xuongca", xuong_ca))
     app.add_handler(CommandHandler("noel", noel))
     app.add_handler(CommandHandler("tet", tet))
+    app.add_handler(CommandHandler("hoa", hoa))
     app.add_handler(CommandHandler("cancel", cancel))
 
     logging.info("Bot is starting (polling)...")
