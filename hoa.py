@@ -29,6 +29,7 @@ def parse_hhmm(hhmm: str) -> tuple[int, int]:
     return h, m
 
 def fmt_td(seconds: int) -> str:
+    """Format seconds -> 'X giờ Y phút Z giây' """
     if seconds < 0:
         seconds = 0
     h = seconds // 3600
@@ -40,112 +41,122 @@ def fmt_td(seconds: int) -> str:
     parts.append(f"{s} giây")
     return " ".join(parts)
 
+def fmt_td_days(seconds: int) -> str:
+    """Format seconds -> 'X ngày Y giờ Z phút T giây' """
+    if seconds < 0:
+        seconds = 0
+    days = seconds // 86400
+    hours = (seconds % 86400) // 3600
+    minutes = (seconds % 3600) // 60
+    secs = seconds % 60
+    return f"{days} ngày {hours} giờ {minutes} phút {secs} giây"
+
 def pick(lst):
     return random.choice(lst)
 
-# ===== Câu trả lời random (10 câu mỗi lệnh) =====
+# ===== Random replies (10 câu mỗi lệnh) =====
 START_MSGS = [
-    "Bot online rồi nha 😎 Dùng /ancom /uongnuoc HH:MM /divesinh /xuongca /noel /tet",
-    "Chào bạn! Bot chạy ngon rồi đây 🤖 Gõ /start xem lệnh nha.",
-    "Hoahoabot đã thức giấc 😆 Lệnh: /ancom /uongnuoc /divesinh /xuongca /noel /tet",
-    "Bot sẵn sàng phục vụ! Nhớ uống nước và ăn cơm đúng giờ nha 😄",
-    "Có mình ở đây rồi! Muốn nhắc gì cứ gõ lệnh 😌",
-    "Hê lô hê lô, bot lên sóng! 📡 Dùng /start để xem lệnh.",
-    "Xin chào! Bot này chuyên nhắc việc linh tinh cho bạn đó 😂",
-    "Bot hoạt động ổn áp nhé! Cứ quăng lệnh là mình trả lời liền.",
-    "Đã kết nối thành công 🤝 Thử /ancom hoặc /xuongca xem sao!",
-    "Bot bật rồi nè! Điểm danh bằng /ancom đi bạn 😆",
+    "🤖 Bot hoahoabot online rồi nha!\n\nMuốn ăn cơm thì /ancom,\nnhắc nước thì /uongnuoc HH:MM nhé 😄",
+    "Hello bạn!\n\nBot sẵn sàng phục vụ 😎\nThử /ancom hoặc /xuongca đi nè!",
+    "Ping ping! Bot đã thức giấc 🐣\n\nLệnh chính: /ancom /uongnuoc /divesinh /xuongca /noel /tet",
+    "Bot đang trực 24/7 nè 😆\n\nCứ quăng lệnh là mình rep liền!",
+    "Kết nối thành công 🤝\n\nUống nước nhớ gọi /uongnuoc nha bạn!",
+    "Hoahoabot xuất hiện!\n\nĐói thì /ancom,\nbuồn ngủ thì uống nước 😄",
+    "Bot đã online 📡\n\nLật bài bằng /start để xem lệnh nhé!",
+    "Xin chào!\n\nMình là bot nhắc việc linh tinh cho bạn 😂",
+    "Bot bật rồi nha 😎\n\nThử /noel hoặc /tet xem còn bao lâu nữa!",
+    "Có mình ở đây rồi!\n\nĐừng quên ăn cơm và uống nước đúng giờ 😋",
 ]
 
 ANCOM_JOKES = [
-    "🍚 Ăn cơm đi bạn ơi, đói là dễ quạo lắm đó 😆",
-    "🍚 Cơm mà không ăn là cơm khóc đó nha 😂",
-    "🍚 Nạp cơm để còn chiến deadline chứ bạn 😎",
-    "🍚 Đói bụng thì IQ tụt, đi ăn lẹ đi 😵‍💫",
-    "🍚 Ăn cơm xong rồi tính tiếp, đừng tính lúc đói 😄",
-    "🍚 Đi ăn cơm đi, bụng réo nghe mệt dùm luôn 😅",
-    "🍚 Không ăn cơm là chiều nay yếu đuối đó nha 😤",
-    "🍚 Ăn cơm đúng giờ = sống thọ + vui vẻ 😋",
-    "🍚 Lát nữa hối hận vì đói thì muộn rồi, ăn thôi!",
-    "🍚 Cơm nóng canh ngon đang đợi kìa, triển nè!",
+    "🍚 **Tới giờ ăn cơm rồi đóoo!** 🍚\n\nBụng mà réo lên là não lag liền nha 😵‍💫\nĂn xong rồi chiến tiếp cho máu 😎\n\n🔥 Đi ăn cơm thôi boss!",
+    "🍽️ **Ăn cơm điiii!** 🍽️\n\nĐói là dễ cáu, dễ muốn nghỉ làm lắm đó 😂\nNạp năng lượng rồi hẵng chửi deadline nha 😆\n\n👉 Lượn nhẹ đi ăn nào!",
+    "🥢 **Cơm nước tới nơi rồi nè!** 🥢\n\nKhông ăn là chiều nay yếu đuối liền 😅\nĂn no mới có lực gánh team chứ 😎\n\n✨ Ăn thôi bạn!",
+    "🍚 **Báo động bụng đói!** 🍚\n\nDạ dày kêu inh ỏi rồi đó nghe không 😆\nĂn sớm sống khỏe, ăn trễ sống… run 😵‍💫\n\n🔥 Đi ăn liền!",
+    "🍛 **Ăn cơm cái nha!** 🍛\n\nĐói là tụt mood, tụt mood là tụt năng suất 😅\nNạp cơm vô để não chạy mượt hơn 😎\n\n🍚 Triển thôi!",
+    "🍜 **Tới giờ nạp năng lượng rồi!** 🍜\n\nBỏ bữa là dạ dày buồn đó nha 😂\nĂn xong quay lại chiến tiếp cho căng 😆\n\n👉 Ăn lẹ nào!",
+    "🍲 **Cơm gọi tên bạn kìa!** 🍲\n\nĐể bụng đói là dễ mơ thấy… cơm 😂\nĂn no rồi làm gì cũng trơn tru 😎\n\n🔥 Đi ăn đây!",
+    "🍚 **Ăn cơm đúng giờ nha bạn!** 🍚\n\nĐói quá là não đơ liền 😵‍💫\nĂn xong rồi tính tiếp cho tỉnh 😄\n\n✨ Ăn thôi!",
+    "🥘 **Ăn đi rồi nói chuyện tiếp!** 🥘\n\nĐói là dễ nói bậy lắm đó 😆\nNạp cơm vô rồi hẵng combat deadline 😎\n\n👉 Lên kèo ăn cơm!",
+    "🍚 **Cơm canh sẵn rồi đó!** 🍚\n\nBụng đói là năng lượng off 😅\nĂn xong auto vui vẻ liền 😄\n\n🔥 Đi ăn cơm thôi!",
 ]
 
 DIVESINH_JOKES = [
-    "🚽 Đi vệ sinh đi bạn, nhịn là phản khoa học 😆",
-    "🚽 Tới giờ giải phóng rồi đó, đi lẹ cho nhẹ người 😄",
-    "🚽 Đừng ôm nỗi buồn trong bụng, đi xả đi 😅",
-    "🚽 Đi đi cho thoải mái, về làm mới hăng 😎",
-    "🚽 Nhịn là hại thận đó nha 😤 Đi ngay!",
-    "🚽 Nhanh gọn lẹ rồi comeback mạnh mẽ 😆",
-    "🚽 Đi vệ sinh xong là tâm hồn trong sáng liền ✨",
-    "🚽 Đầu óc đang lag à? Đi vệ sinh cái cho tỉnh 😄",
-    "🚽 Đi phát cho nhẹ bụng, nhẹ luôn deadline 🤭",
-    "🚽 Đi thôi, để bụng biểu tình là mệt lắm!",
+    "🚽 **Tới giờ đi vệ sinh rồi đó!** 🚽\n\nNhịn hoài coi chừng bụng biểu tình 😅\nĐi xong nhẹ người, làm việc mới hăng 😎\n\n👉 Đi liền!",
+    "🚽 **Xả stress thôi nào!** 🚽\n\nGiữ trong bụng lâu là không ổn đâu 😂\nĐi xong là thấy đời tươi liền 😆\n\n✨ Triển!",
+    "🚽 **Đi vệ sinh đi bạn ơi!** 🚽\n\nNhịn là phản khoa học đó nha 😤\nNhẹ bụng nhẹ đầu, khỏe re 😄\n\n👉 Lượn thôi!",
+    "🚽 **Tới giờ giải phóng nội tâm!** 🚽\n\nĐi xong là tinh thần phơi phới liền 😆\nĐừng cố chịu đựng nha 😅\n\n🔥 Đi lẹ!",
+    "🚽 **Bụng kêu rồi đó!** 🚽\n\nĐừng để nó kêu thành nhạc remix 😆\nĐi cái cho thoải mái nè 😄\n\n👉 Đi ngay!",
+    "🚽 **Đi cho nhẹ người nha!** 🚽\n\nNhịn lâu là mệt lắm đó 😵‍💫\nĐi xong quay về chiến tiếp 😎\n\n✨ Let's go!",
+    "🚽 **Giờ vàng đi vệ sinh!** 🚽\n\nXả đúng nơi đúng lúc, cuộc đời yên vui 😆\nNhẹ bụng rồi làm gì cũng ngon 😄\n\n👉 Đi nha!",
+    "🚽 **Tới giờ rồi còn gì!** 🚽\n\nNhịn là hại thận đó nha 😤\nĐi xong auto tỉnh táo 😎\n\n🔥 Đi thôi!",
+    "🚽 **Không đi là bụng giận đó!** 🚽\n\nĐi xong còn có mood làm việc nữa 😄\nNhẹ cái là vui liền 😆\n\n👉 Đi lẹ!",
+    "🚽 **Đi phát cho khỏe!** 🚽\n\nBụng nhẹ = tâm trạng nhẹ 😋\nĐi xong quay lại mình chờ 😎\n\n✨ Triển luôn!",
 ]
 
 UONGNUOC_SET_MSGS = [
-    "💧 Ok! Mình nhắc bạn uống nước giờ {t} mỗi ngày nha.",
-    "💧 Đã đặt nhắc lúc {t}. Uống nước đều đều cho tỉnh 😄",
-    "💧 Nhắc nước lúc {t} xịn sò luôn. Đừng để khô cổ nha!",
-    "💧 Chuẩn! {t} mỗi ngày mình ping bạn liền 😎",
-    "💧 Set kèo uống nước {t} thành công. Nhớ nghe lời bot 😆",
-    "💧 Lịch uống nước {t} đã lưu. Tới giờ là réo liền!",
-    "💧 Đặt nhắc {t} rồi đó. Uống nước cho đẹp da nha 😋",
-    "💧 Oke bạn! Cứ tới {t} là mình nhắc liền tay.",
-    "💧 Mình sẽ gõ cửa lúc {t} mỗi ngày, chuẩn giờ VN luôn.",
-    "💧 Done! Nhắc uống nước {t} mỗi ngày nhé bạn.",
+    "💧 Ok! Mình nhắc bạn uống nước lúc {t} mỗi ngày nha.",
+    "💧 Đã đặt nhắc {t}. Tới giờ mình réo liền 😄",
+    "💧 Set kèo uống nước {t} xong rồi đó 😎",
+    "💧 Lịch uống nước {t} đã lưu. Nhớ nghe lời bot 😆",
+    "💧 Đặt nhắc {t} thành công. Uống đều nha 😋",
+    "💧 Done! {t} mỗi ngày mình nhắc một phát.",
+    "💧 Oke bạn, tới {t} là ping ping liền.",
+    "💧 Nhắc uống nước {t} ok rồi nha!",
+    "💧 Mình sẽ nhắc bạn lúc {t} chuẩn giờ VN.",
+    "💧 Lịch uống nước {t} đã set.",
 ]
 
 UONGNUOC_ALARM_MSGS = [
     "💧 Tới giờ uống nước rồi! {m}",
-    "💧 Ping ping! Uống nước thôi nào 😄 {m}",
+    "💧 Ping ping! Uống nước nè 😄 {m}",
     "💧 Cốc nước đang gọi tên bạn đó 😆 {m}",
-    "💧 Đến giờ nạp nước cho cơ thể! {m}",
-    "💧 Uống nước đi, đừng để khô như cá mắm 😂 {m}",
-    "💧 Giờ vàng uống nước nè! {m}",
-    "💧 Tới lịch rồi bạn ơi, uống miếng nha 😋 {m}",
-    "💧 Bot nhắc nhẹ: uống nước liền cho khỏe! {m}",
-    "💧 Đừng quên uống nước nha! {m}",
-    "💧 Nước vào là não chạy mượt liền 😎 {m}",
+    "💧 Nạp nước cho cơ thể thôi! {m}",
+    "💧 Đừng để khô cổ nha 😂 {m}",
+    "💧 Giờ vàng uống nước! {m}",
+    "💧 Tới lịch rồi đó 😋 {m}",
+    "💧 Bot nhắc nhẹ: uống nước liền nha {m}",
+    "💧 Nhấp vài ngụm cho tỉnh táo nè {m}",
+    "💧 Uống nước cái nè, não chạy mượt liền 😎 {m}",
 ]
 
 CANCEL_MSGS = [
     "✅ Đã hủy nhắc uống nước rồi nha.",
-    "✅ Ok bạn, nhắc uống nước đã bị tắt 😄",
-    "✅ Đã xóa lịch nhắc. Khi nào cần thì set lại nha!",
-    "✅ Hủy xong rồi đó. Tự giác uống nước nhe 😆",
-    "✅ Nhắc nước off. Nhớ đừng quên uống nha 😋",
-    "✅ Lịch nhắc đã bay màu 🧹",
-    "✅ Done, không nhắc nữa. Nhưng vẫn phải uống đó nha 😤",
-    "✅ Hủy lịch thành công, bot nghỉ tay đây 😄",
-    "✅ Okela, nhắc uống nước đã tắt.",
-    "✅ Đã hủy. Khi nào khát thì gọi bot lại 😆",
+    "✅ Ok bạn, tắt nhắc uống nước rồi 😄",
+    "✅ Hủy lịch nhắc xong rồi đó.",
+    "✅ Nhắc uống nước đã off 😆",
+    "✅ Done, không nhắc nữa nha.",
+    "✅ Lịch nhắc bay màu 🧹",
+    "✅ Tắt nhắc thành công.",
+    "✅ Okela, hủy nhắc rồi.",
+    "✅ Hủy xong, tự giác uống nha 😋",
+    "✅ Đã hủy nhắc nước.",
 ]
 
 NO_JOBS_MSGS = [
-    "🤔 Chưa có lịch uống nước nào để hủy á.",
-    "🤔 Bạn chưa set nhắc nước mà, hủy gì giờ 😆",
-    "🤔 Không thấy lịch nào hết. Set trước rồi hủy sau nha 😄",
-    "🤔 Trống trơn luôn. Bạn thử /uongnuoc HH:MM đi.",
-    "🤔 Không có job nào cả. Bot nhìn thấy số 0 😂",
-    "🤔 Chưa đặt thì sao hủy được bạn ơi 😅",
-    "🤔 Lịch nhắc nước chưa tồn tại nha.",
-    "🤔 Bạn chưa set giờ nhắc đâu, thử lại nhé!",
-    "🤔 Không có nhắc để hủy. Bot cũng hơi buồn 😆",
-    "🤔 Set nhắc rồi mới hủy được nè bạn.",
+    "🤔 Chưa có nhắc nào để hủy á.",
+    "🤔 Bạn chưa đặt nhắc nước mà 😆",
+    "🤔 Không thấy lịch nhắc nào hết.",
+    "🤔 Set nhắc trước rồi hủy sau nha 😄",
+    "🤔 Trống trơn luôn 😂",
+    "🤔 Chưa đặt sao hủy được 😅",
+    "🤔 Không có job nào cả.",
+    "🤔 Bạn chưa set giờ nhắc đâu.",
+    "🤔 Không có nhắc để hủy nè.",
+    "🤔 Thử /uongnuoc HH:MM trước đã nhé.",
 ]
 
 XUONGCA_BEFORE_MSGS = [
-    "🏁 Còn {left} nữa là xuống ca rồi, ráng xíu 😎",
-    "🏁 Down ca còn {left} thôi, cố lên bạn ơi 😄",
-    "🏁 Sắp được về rồi! Còn {left} nè 😆",
+    "🏁 Còn {left} nữa là xuống ca 😎",
+    "🏁 Down ca còn {left} thôi 😄",
+    "🏁 Sắp được về! Còn {left} 😆",
     "🏁 {left} nữa là tự doooo 🥳",
-    "🏁 Ráng thêm {left} nữa thôi, về ngủ cho đã!",
-    "🏁 Còn {left}. Đếm từng giây cho chóng hết ca 😅",
-    "🏁 Nhẫn nại nha, còn {left} là kết thúc ca!",
-    "🏁 {left} nữa thôi, bot cũng nóng lòng giùm 😆",
-    "🏁 Gần tới đích rồi! {left} nha bạn 😎",
-    "🏁 Sắp hết ca, còn đúng {left}!",
+    "🏁 Ráng thêm {left} nữa thôi 😅",
+    "🏁 Còn {left} nè, chịu khó xíu!",
+    "🏁 Gần tới giờ về rồi, còn {left} nha 😄",
+    "🏁 Đếm ngược: {left}!",
+    "🏁 {left} nữa thôi, bot nóng lòng giùm 😆",
+    "🏁 Còn đúng {left} là hết ca!",
 ]
 
 XUONGCA_AFTER_MSGS = [
@@ -154,9 +165,9 @@ XUONGCA_AFTER_MSGS = [
     "🏁 Ca xong rồi, nghỉ ngơi đi bạn 😄",
     "🏁 Đã qua giờ xuống ca, chúc mừng 🎉",
     "🏁 Hết ca rồi, bot cho bạn về 😎",
-    "🏁 Giờ này mà còn làm thì… cứng thật 😆",
+    "🏁 Giờ này mà còn làm thì cứng thật 😆",
     "🏁 Down ca rồi nha, bật chế độ relax thôi!",
-    "🏁 Ca kết thúc rồi, đi ăn chơi thôi nào 😋",
+    "🏁 Ca kết thúc rồi, đi ăn chơi thôi 😋",
     "🏁 Hết ca! Nhớ giữ sức cho mai nha.",
     "🏁 Tạm biệt ca làm, chào tự dooo 🥳",
 ]
@@ -164,27 +175,27 @@ XUONGCA_AFTER_MSGS = [
 NOEL_MSGS = [
     "🎄 Còn {left} nữa là tới Noel rồi đó!",
     "🎄 Noel sắp tới! Đếm ngược: {left} 😆",
-    "🎄 Còn {left} nữa được nghe Jingle Bells full volume 😄",
-    "🎄 {left} nữa là ông già Noel ghé thăm 😎",
-    "🎄 Gần tới Noel rồi, còn {left} nè!",
-    "🎄 Đợi Noel hơi lâu, còn {left} thôi 😅",
-    "🎄 Còn {left} nữa là ăn gà rán Noel 🥳",
+    "🎄 {left} nữa thôi là nghe Jingle Bells full volume 😄",
+    "🎄 Còn {left} nữa là ông già Noel ghé thăm 😎",
+    "🎄 Gần Noel lắm rồi, còn {left} nè!",
+    "🎄 Đợi Noel hơi lâu nhưng còn {left} thôi 😅",
+    "🎄 {left} nữa là ăn gà rán Noel 🥳",
     "🎄 {left} nữa thôi, chuẩn bị quà đi bạn 😋",
+    "🎄 Countdown Noel: {left}!",
     "🎄 Noel tới nơi rồi! Còn {left}.",
-    "🎄 Countdown Noel: {left} 🎅",
 ]
 
 NOEL_AFTER_MSGS = [
-    "🎄 Noel tới rồi đó! Chúc bạn Giáng Sinh vui vẻ 🎅",
-    "🎄 Merry Christmas! Noel đang diễn ra nè 😆",
-    "🎄 Tới Noel rồi, quẩy thôi bạn 😄",
-    "🎄 Noel rồi đóoo! 🎁",
-    "🎄 Giáng Sinh vui vẻ nha bạn 😎",
-    "🎄 Noel đã tới, nhớ ăn gà rán 😋",
+    "🎄 Noel tới rồi đó! Merry Christmas 🎅",
+    "🎄 Noel rồi! Chúc bạn vui vẻ nha 😆",
+    "🎄 Giáng Sinh vui vẻ nhé bạn 😄",
+    "🎄 Noel đây rồi đóoo! 🎁",
+    "🎄 Christmas timeeee 😎",
+    "🎄 Noel tới rồi, nhớ ăn gà rán 😋",
     "🎄 Hohoho! Noel rồi 🎅",
-    "🎄 Noel đây rồi, đừng quên tặng quà nha!",
-    "🎄 Christmas timeeee 🥳",
-    "🎄 Noel rồi bạn ơi, chill thôi!",
+    "🎄 Noel đang diễn ra nè, chill thôi!",
+    "🎄 Merry Christmas! 🥳",
+    "🎄 Noel rồi bạn ơi, quẩy lên!",
 ]
 
 TET_MSGS = [
@@ -205,12 +216,12 @@ TET_AFTER_MSGS = [
     "🧧 Năm mới vui vẻ nha bạn 😄",
     "🧧 Tết rồi đóoo! Lì xì đâu 😆",
     "🧧 Chúc bạn ăn Tết thật đã 😎",
-    "🧧 Tết đến rồi, chill thôi!",
     "🧧 Happy Lunar New Year 🥳",
+    "🧧 Tết đến rồi, chill thôi!",
     "🧧 Tết đây rồi, nhớ ăn bánh chưng 😋",
     "🧧 Năm mới phát tài phát lộc nha!",
     "🧧 Tết rồi bạn ơi, quẩy lên 🎉",
-    "🧧 Xuân sang, chúc bạn mọi điều may mắn!",
+    "🧧 Xuân sang, chúc bạn may mắn!",
 ]
 
 # ===== Commands =====
@@ -288,13 +299,15 @@ async def xuong_ca(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def noel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     now = datetime.now(VN_TZ)
     year = now.year
+
     target = datetime(year, 12, 25, 0, 0, 0, tzinfo=VN_TZ)
     if now > target:
         target = datetime(year + 1, 12, 25, 0, 0, 0, tzinfo=VN_TZ)
 
     left_sec = int((target - now).total_seconds())
     if left_sec > 0:
-        msg = pick(NOEL_MSGS).format(left=fmt_td(left_sec))
+        left_txt = fmt_td_days(left_sec)
+        msg = pick(NOEL_MSGS).format(left=left_txt)
         await update.message.reply_text(msg)
     else:
         await update.message.reply_text(pick(NOEL_AFTER_MSGS))
@@ -306,14 +319,15 @@ async def tet(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     left_sec = int((tet_target - now).total_seconds())
     if left_sec > 0:
-        msg = pick(TET_MSGS).format(left=fmt_td(left_sec))
+        left_txt = fmt_td_days(left_sec)
+        msg = pick(TET_MSGS).format(left=left_txt)
         await update.message.reply_text(msg)
     else:
         await update.message.reply_text(pick(TET_AFTER_MSGS))
 
 # ===== Run bot =====
 def main():
-    token = "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A"  # dán token thật của bạn vào đây
+    token = "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A"  # dán token thật vào đây
 
     if not token or token == "PASTE_YOUR_REAL_TOKEN_HERE":
         raise RuntimeError("Bạn chưa dán token thật vào biến token!")
