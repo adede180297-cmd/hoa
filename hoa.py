@@ -194,7 +194,7 @@ async def xuong_ca(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ===== Run bot =====
 def main():
     # CÁCH 2: dán token trực tiếp ở đây
-    token = "PASTE_YOUR_REAL_TOKEN_HERE"
+    token = "8587076270:AAHtFh3M6Xk4Hk_MP9FsEuvp7fedlvBe01A"
 
     if not token or token == "PASTE_YOUR_REAL_TOKEN_HERE":
         raise RuntimeError("Bạn chưa dán token thật vào biến token!")
@@ -213,3 +213,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
